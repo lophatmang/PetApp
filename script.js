@@ -75,7 +75,7 @@ btnHold.addEventListener('click', function () {
 
     document.getElementById(`score--${activePlayer}`).textContent =
       scores[activePlayer];
-    if (scores[activePlayer] >= 20) {
+    if (scores[activePlayer] >= 100) {
       diceEl.classList.add('hidden');
       btnHold.disabled = true;
       btnRoll.disabled = true;

@@ -1,54 +1,9 @@
 "use strict";
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// tableBodyEl.innerHTML = "";
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-healthyBtn.textContent = "Show Healthy Pet";
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//  tạo nút xóa dữ liệu trong bảng
-function deletePet(petid) {
-  swal({
-    title: "",
-    text: `Bạn có chắc muốn xóa pet có Id: ${petid} không?`,
-    icon: "warning",
-    buttons: true,
-    dangerMode: true,
-  }).then((willDelete) => {
-    if (willDelete) {
-      swal({
-        title: `Đã xóa pet Id: ${petid}`,
-        text: "",
-        icon: "success",
-      });
-      for (let x = 0; x < petArr.length; x++) {
-        // petArr.forEach((key, x, arr) => {
-        if (petArr[x].id == petid) {
-          petArr.splice(x, 1);
-          renderTableData(petArr);
-          saveToStorage("petArr", JSON.stringify(petArr));
-          break;
-        }
-      }
-      if (healthyBtn.textContent == "Show All Pet") {
-        healthyBtn.textContent = "Show Healthy Pet";
-      }
-    } else {
-      swal(`Đã hủy xóa pet Id: ${petid} `, "");
-    }
-  });
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// làm mới dữ liệu của bảng
+// làm mới dữ liệu của bảng edit
 function renderTableData(petArr) {
   tableBodyEl.innerHTML = ""; //xóa hết bảng table
-  // thêm dữ liệu từ mảng petarr vô table
+  // thêm dữ liệu từ mảng petArr vô table
   petArr.forEach((pet) => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -73,21 +28,46 @@ function renderTableData(petArr) {
     }-circle-fill"></i></td>
     <td>${pet.date.slice(0, 10)}</td>
     <td>
-    <button type="button" class="btn btn-danger" onclick="deletePet('${
+    <button type="button" class="btn btn-warning" onclick="startEditPet('${
       pet.id
-    }')" >Delete</button>
+    }')" >Edit</button>
     </td>`;
     tableBodyEl.appendChild(row);
   });
 }
 renderTableData(petArr);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// nút submit thêm thú cưng
+//tạo hàm sửa thông tin pet
+const startEditPet = (petid) => {
+  clearInput();
+  //cho hiệm from chỉnh sửa
+  containeFrorm.classList.add("active1");
+  setTimeout(() => containeFrorm.classList.add("active2"), 1000);
+
+  //hiển thị thông tin của pet muốn sửa
+  petArr.forEach((pet) => {
+    if (petid == pet.id) {
+      idInput.value = pet.id;
+      nameInput.value = pet.name;
+      ageInput.value = pet.age;
+      typeInput.value = pet.type;
+      weightInput.value = pet.weight;
+      lengthInput.value = pet.length;
+      colorInput.value = pet.color;
+      vaccinatedInput.checked = pet.vaccinated;
+      dewormedInput.checked = pet.dewormed;
+      sterilizedInput.checked = pet.sterilized;
+      renderBreed(typeInput);
+      breedInput.value = pet.breed;
+    }
+  });
+};
+
+//nút submit edit pet
 submitBtn.addEventListener("click", function (e) {
   const day = new Date();
   const data = {
-    id: id(parseInt(idInput.value)),
+    id: idInput.value,
     name: nameInput.value.charAt(0).toUpperCase() + nameInput.value.slice(1),
     age: parseInt(ageInput.value),
     type: typeInput.value,
@@ -99,6 +79,9 @@ submitBtn.addEventListener("click", function (e) {
     dewormed: dewormedInput.checked,
     sterilized: sterilizedInput.checked,
     // date: `${day.getDate()}/${day.getMonth() + 1}/${day.getFullYear()}`,
+    // date: `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}T${
+    //   day.getHours() + 1
+    // }:${day.getMinutes() + 1}:${day.getSeconds()}`,
     date: `${day.getFullYear()}-${
       day.getMonth() < 10 ? `0${day.getMonth() + 1}` : day.getMonth()
     }-${day.getDate() < 10 ? `0${day.getDate()}` : day.getDate()}`,
@@ -106,31 +89,6 @@ submitBtn.addEventListener("click", function (e) {
 
   // check dữ liệu nhập vào
   function validateData(data) {
-    /*
-  // kiểm tra tất cả dữ liệu bị trống
-  for (const key in data) {
-    const check = data[key];
-    if (!check) {
-      swal("vui lòng ko bỏ trống ", "Vui lòng nhận thông tin vào ", "error");
-      return false;
-    }
-  }
-  */
-    // kiem tra id
-    if (isNaN(parseInt(data.id.replace(/[^0-9]/g, "")))) {
-      swal("Id không thể bỏ trống", "", "warning"); // có thể dùng "warning", "error", "success" and "info"
-      return false;
-    } else if (data.id <= 0) {
-      swal("Id phải lơn hơn 0", "", "warning"); // có thể dùng "warning", "error", "success" and "info"
-      return false;
-    } else {
-      for (let i = 0; i < petArr.length; i++) {
-        if (petArr[i].id == data.id) {
-          swal("Id đã bị trùng ", "Vui lòng nhận id khác ", "error"); // có thể dùng "warning", "error", "success" and "info"
-          return false;
-        }
-      }
-    }
     // kiểm tra name
     if (!data.name) {
       swal("Tên không thể bỏ trống", "Vui lòng nhận Tên vào", "warning"); // có thể dùng "warning", "error", "success" and "info"
@@ -173,31 +131,19 @@ submitBtn.addEventListener("click", function (e) {
     // đấp ưng đủ điều kiện trả về true
     return true;
   }
+
   // nếu đưa giạ trị object data vào  hàm validateData kiểm tra điều kiện trả về true sẽ  thực hiện thêm vô mảng pet arr
   const validate = validateData(data);
+
   if (validate) {
-    petArr.push(data);
-    saveToStorage("petArr", JSON.stringify(petArr));
-    clearInput();
-    renderTableData(petArr);
-    if (healthyBtn.textContent == "Show All Pet") {
-      healthyBtn.textContent = "Show Healthy Pet";
-    }
-  }
-});
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//nút Show Healthy Pet
-
-healthyBtn.addEventListener("click", function (e) {
-  const healthyPetArr = petArr.filter(
-    (e) => e.vaccinated == true && e.dewormed == true && e.sterilized == true
-  );
-  if (healthyBtn.textContent == "Show Healthy Pet") {
-    renderTableData(healthyPetArr);
-    healthyBtn.textContent = "Show All Pet";
-  } else {
-    renderTableData(petArr);
-    healthyBtn.textContent = "Show Healthy Pet";
+    petArr.forEach((pet, i) => {
+      if (data.id == pet.id) {
+        petArr[i] = data;
+        saveToStorage("petArr", JSON.stringify(petArr));
+        renderTableData(petArr);
+        containeFrorm.classList.remove("active2");
+        setTimeout(() => containeFrorm.classList.remove("active1"), 1000);
+      }
+    });
   }
 });

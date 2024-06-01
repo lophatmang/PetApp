@@ -13,6 +13,7 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"
@@ -34,7 +35,7 @@
         font-size: 14px;
       }
     </style>
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="../style.css" />
   </head>
 
   <body>
@@ -47,32 +48,32 @@
         </div>
 
         <ul class="list-unstyled components">
-          <li class="active">
-            <a href="#">
+          <li class="">
+            <a href="../index.html">
               <i class="bi bi-house"></i>
               Home
             </a>
           </li>
           <li class="">
-            <a href="./page/edit.html">
+            <a href="./edit.html">
               <i class="bi bi-pencil-square"></i>
               Edit
             </a>
           </li>
-          <li class="">
-            <a href="./page/search.html">
+          <li class="active">
+            <a href="#">
               <i class="bi bi-search"></i>
               Search
             </a>
           </li>
           <li class="">
-            <a href="./page/breed.html">
+            <a href="./breed.html">
               <i class="bi bi-list-ul"></i>
               Breed
             </a>
           </li>
           <li class="active">
-            <a href="./page/data.html">
+            <a href="./data.html">
               <i class="bi bi-clipboard-data"></i>
               Data
             </a>
@@ -84,31 +85,32 @@
       <div id="content">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container-fluid">
-            <a class="navbar-brand" href="#">Pet Management</a>
+            <a class="navbar-brand" href="#">Search Pet</a>
           </div>
         </nav>
         <div class="container" id="main">
-          <div class="row justify-content-center align-items-center mt-4">
+          <div
+            class="row justify-content-center align-items-center mt-4 active1 active2"
+            id="container-form"
+          >
             <div class="col-lg-6 col-lg-offset-4">
               <form>
                 <div class="form-group row mb-3">
                   <label for="input-id" class="col-sm-3 col-form-label"
                     >Pet ID</label
                   >
-                  <div class="col-sm-9">
+                  <div class="col-sm-3">
                     <input
-                      type="number"
+                      type="text"
                       class="form-control"
                       id="input-id"
                       placeholder="Input ID"
                     />
                   </div>
-                </div>
-                <div class="form-group row mb-3">
-                  <label for="input-name" class="col-sm-3 col-form-label"
+                  <label for="input-name" class="col-sm-2 col-form-label"
                     >Pet Name</label
                   >
-                  <div class="col-sm-5">
+                  <div class="col-sm-4">
                     <input
                       type="text"
                       class="form-control"
@@ -116,91 +118,28 @@
                       placeholder="Input Name"
                     />
                   </div>
-                  <label
-                    for="input-age"
-                    class="col-sm-1 col-form-label"
-                    style="text-align: right"
-                    >Age</label
-                  >
-                  <div class="col-sm-3">
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="input-age"
-                      placeholder="Input Age"
-                    />
-                  </div>
                 </div>
                 <div class="form-group row mb-3">
                   <label for="input-type" class="col-sm-3 col-form-label"
                     >Type</label
                   >
-                  <div class="col-sm-9">
+                  <div class="col-sm-3">
                     <select
                       class="form-control"
                       id="input-type"
-                      onchange="renderBreed(this)"
+                      onchange="renderBreedFind(this)"
                     >
                       <option>Select Type</option>
                       <option>Dog</option>
                       <option>Cat</option>
                     </select>
                   </div>
-                </div>
-                <div class="form-group row mb-3">
-                  <label for="input-weight" class="col-sm-3 col-form-label"
-                    >Weight</label
-                  >
-                  <div class="col-sm-3">
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="input-weight"
-                      placeholder="Input Weight"
-                    />
-                  </div>
-
-                  <label
-                    for="input-length"
-                    class="col-sm-3 col-form-label"
-                    style="text-align: right"
-                    >Length</label
-                  >
-                  <div class="col-sm-3">
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="input-length"
-                      placeholder="Input Length"
-                    />
-                  </div>
-                </div>
-                <div class="form-group row mb-3">
-                  <label class="col-sm-3 col-form-label">Color</label>
-                  <div class="col-sm-3">
-                    <input
-                      type="color"
-                      class="form-control"
-                      id="input-color-1"
-                    />
-                  </div>
-                  <label
-                    for="input-breed"
-                    class="col-sm-3 col-form-label"
-                    style="text-align: right"
+                  <label for="input-breed" class="col-sm-2 col-form-label"
                     >Breed</label
                   >
-                  <div class="col-sm-3">
+                  <div class="col-sm-4">
                     <select class="form-control" id="input-breed">
                       <option>Select Breed</option>
-                      <!-- <option>Tabby</option>
-                      <option>Domestic Medium Hair</option>
-                      <option>Mixed Breed</option>
-                      <option>Domestic Short Hair</option>
-                      <option>Terrier</option>
-                      <option>Greyhound</option>
-                      <option>Persian</option>
-                      <option>Rottweiler</option> -->
                     </select>
                   </div>
                 </div>
@@ -237,11 +176,8 @@
                     >
                   </div>
                 </div>
-                <button type="button" class="btn btn-primary" id="submit-btn">
-                  Submit
-                </button>
-                <button type="button" class="btn btn-warning" id="healthy-btn">
-                  Show Healthy Pet
+                <button type="button" class="btn btn-primary" id="find-btn">
+                  Find
                 </button>
               </form>
             </div>
@@ -263,7 +199,6 @@
                 <th scope="col">Dewormed</th>
                 <th scope="col">Sterilized</th>
                 <th scope="col">Date Added</th>
-                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody id="tbody"></tbody>
@@ -278,10 +213,11 @@
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
+
+    <script src="../script/storage.js"></script>
+    <script src="../script/search.js"></script>
     <!-- popup thông báo thế alert -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!--  -->
-    <script src="./script/storage.js"></script>
-    <script src="./script.js"></script>
   </body>
 </html>
